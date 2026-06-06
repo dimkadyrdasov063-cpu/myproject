@@ -1,0 +1,74 @@
+{% extends "articles/base.html" %}
+{% block title %}Профиль{% endblock %}
+
+{% block content %}
+<style>
+    .profile-header {
+        background-color: #1a1a1a;
+        border: 1px solid #2a2a2a;
+        border-radius: 12px;
+        padding: 28px 32px;
+        margin-bottom: 32px;
+        display: flex;
+        align-items: center;
+        gap: 20px;
+    }
+    .profile-avatar {
+        width: 64px;
+        height: 64px;
+        border-radius: 50%;
+        background: #7c6af7;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 26px;
+        font-weight: 700;
+        color: #fff;
+        flex-shrink: 0;
+    }
+    .profile-name { font-size: 20px; font-weight: 700; color: #fff; margin-bottom: 4px; }
+    .profile-email { font-size: 13px; color: #666; }
+
+    .section-title { font-size: 18px; font-weight: 600; color: #fff; margin-bottom: 16px; }
+
+    .fav-card {
+        background-color: #1a1a1a;
+        border: 1px solid #2a2a2a;
+        border-radius: 10px;
+        padding: 16px 20px;
+        margin-bottom: 10px;
+        text-decoration: none;
+        display: block;
+        color: inherit;
+        transition: border-color 0.2s;
+    }
+    .fav-card:hover { border-color: #7c6af7; color: inherit; }
+    .fav-card h3 { font-size: 15px; font-weight: 600; color: #e8e8e8; margin: 0 0 4px; }
+    .fav-card:hover h3 { color: #7c6af7; }
+    .fav-meta { font-size: 12px; color: #555; }
+</style>
+
+<div class="profile-header">
+    <div class="profile-avatar">{{ user.username|first|upper }}</div>
+    <div>
+        <div class="profile-name">{{ user.username }}</div>
+        <div class="profile-email">{{ user.email }}</div>
+    </div>
+</div>
+
+<div class="section-title">Избранное ❤️</div>
+
+{% for fav in favorites %}
+    <a href="{% url 'articles:article_detail' fav.article.pk %}" class="fav-card">
+        <h3>{{ fav.article.title }}</h3>
+        <div class="fav-meta">
+            {{ fav.article.author.username }} · {{ fav.article.created_at|date:"d.m.Y" }} · 👁 {{ fav.article.views_count }}
+        </div>
+    </a>
+{% empty %}
+    <div style="color: #444; font-size: 14px; padding: 20px 0;">
+        Вы ещё ничего не добавили в избранное.
+    </div>
+{% endfor %}
+
+{% endblock %}

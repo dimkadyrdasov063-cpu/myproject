@@ -1,0 +1,96 @@
+{% extends "articles/base.html" %}
+{% block title %}Мои статьи{% endblock %}
+
+{% block content %}
+<style>
+    .article-card {
+        background-color: #1a1a1a;
+        border: 1px solid #2a2a2a;
+        border-radius: 10px;
+        padding: 20px 24px;
+        margin-bottom: 14px;
+        transition: border-color 0.2s;
+        text-decoration: none;
+        display: block;
+        color: inherit;
+    }
+    .article-card:hover {
+        border-color: #7c6af7;
+        color: inherit;
+    }
+    .article-card h2 {
+        font-size: 17px;
+        font-weight: 600;
+        color: #e8e8e8;
+        margin-bottom: 6px;
+    }
+    .article-card:hover h2 { color: #7c6af7; }
+    .article-meta { font-size: 13px; color: #666; }
+    .page-title { font-size: 28px; font-weight: 700; margin-bottom: 24px; color: #fff; }
+    .badge-published {
+        font-size: 11px;
+        padding: 2px 8px;
+        border-radius: 20px;
+        background: rgba(124,106,247,0.15);
+        color: #7c6af7;
+        border: 1px solid rgba(124,106,247,0.3);
+    }
+    .badge-draft {
+        font-size: 11px;
+        padding: 2px 8px;
+        border-radius: 20px;
+        background: rgba(255,255,255,0.05);
+        color: #666;
+        border: 1px solid #333;
+    }
+    .page-link { background-color: #1a1a1a; border-color: #333; color: #aaa; }
+    .page-link:hover { background-color: #252525; border-color: #555; color: #fff; }
+    .page-item.disabled .page-link { background-color: #1a1a1a; border-color: #2a2a2a; color: #444; }
+</style>
+
+<div class="d-flex align-items-center justify-content-between mb-4">
+    <h1 class="page-title mb-0">Мои статьи</h1>
+    <a href="{% url 'articles:create_article' %}" class="btn btn-primary btn-sm">+ Написать</a>
+</div>
+
+{% for article in articles %}
+    <a href="{% url 'articles:article_detail' article.pk %}" class="article-card">
+        <div class="d-flex align-items-start justify-content-between gap-3">
+            <h2 class="mb-0">{{ article.title }}</h2>
+            {% if article.is_published %}
+                <span class="badge-published flex-shrink-0">Опубликована</span>
+            {% else %}
+                <span class="badge-draft flex-shrink-0">Черновик</span>
+            {% endif %}
+        </div>
+        <div class="article-meta mt-2">
+            {{ article.created_at|date:"d.m.Y" }} · 👁 {{ article.views_count }}
+            {% if article.category %} · {{ article.category.name }}{% endif %}
+        </div>
+    </a>
+{% empty %}
+    <div style="text-align:center; padding: 60px 0; color: #444;">
+        <p>У вас пока нет статей.</p>
+        <a href="{% url 'articles:create_article' %}" class="btn btn-primary btn-sm mt-2">Написать первую</a>
+    </div>
+{% endfor %}
+
+{% if articles.has_previous or articles.has_next %}
+<nav class="mt-4">
+    <ul class="pagination">
+        {% if articles.has_previous %}
+            <li class="page-item"><a class="page-link" href="?page=1">«</a></li>
+            <li class="page-item"><a class="page-link" href="?page={{ articles.previous_page_number }}">‹</a></li>
+        {% endif %}
+        <li class="page-item disabled">
+            <span class="page-link">{{ articles.number }} / {{ articles.paginator.num_pages }}</span>
+        </li>
+        {% if articles.has_next %}
+            <li class="page-item"><a class="page-link" href="?page={{ articles.next_page_number }}">›</a></li>
+            <li class="page-item"><a class="page-link" href="?page={{ articles.paginator.num_pages }}">»</a></li>
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}
+
+{% endblock %}
