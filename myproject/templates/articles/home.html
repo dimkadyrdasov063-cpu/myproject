@@ -1,0 +1,37 @@
+{% extends 'articles/base.html' %}
+{% block title %}Главная{% endblock %}
+
+{% block content %}
+<style>
+    .hero {
+        padding: 60px 0 50px;
+        max-width: 580px;
+    }
+    .hero h1 {
+        font-size: 38px;
+        font-weight: 700;
+        color: #fff;
+        margin-bottom: 16px;
+        line-height: 1.2;
+    }
+    .hero p {
+        font-size: 16px;
+        color: #888;
+        margin-bottom: 28px;
+        line-height: 1.7;
+    }
+</style>
+
+<div class="hero">
+    <h1>Добро пожаловать 👋</h1>
+    <p>Читайте интересные статьи от авторов со всего сообщества или создайте свою — это просто.</p>
+    <div class="d-flex gap-2 flex-wrap">
+        <a href="{% url 'articles:article_list' %}" class="btn btn-primary">Читать статьи</a>
+        {% if not user.is_authenticated %}
+            <a href="{% url 'articles:signup' %}" class="btn btn-outline-secondary">Зарегистрироваться</a>
+        {% else %}
+            <a href="{% url 'articles:create_article' %}" class="btn btn-outline-secondary">+ Написать статью</a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

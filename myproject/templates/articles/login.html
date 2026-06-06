@@ -1,0 +1,71 @@
+{% extends "articles/base.html" %}
+{% block title %}Вход{% endblock %}
+
+{% block content %}
+<style>
+    .auth-box {
+        max-width: 400px;
+        margin: 40px auto;
+        background-color: #1a1a1a;
+        border: 1px solid #2a2a2a;
+        border-radius: 12px;
+        padding: 36px 32px;
+    }
+    .auth-box h2 {
+        text-align: center;
+        font-size: 22px;
+        font-weight: 700;
+        color: #fff;
+        margin-bottom: 24px;
+    }
+    .auth-box p {
+        margin-bottom: 16px;
+    }
+    .auth-box label {
+        display: block;
+        font-size: 13px;
+        color: #888;
+        margin-bottom: 5px;
+    }
+    .auth-box input {
+        width: 100%;
+        background-color: #222;
+        border: 1px solid #333;
+        border-radius: 8px;
+        color: #e0e0e0;
+        padding: 10px 12px;
+        font-size: 14px;
+        outline: none;
+    }
+    .auth-box input:focus {
+        border-color: #7c6af7;
+    }
+    .auth-links {
+        text-align: center;
+        margin-top: 20px;
+        font-size: 13px;
+    }
+    .auth-links a {
+        color: #888;
+        text-decoration: none;
+    }
+    .auth-links a:hover {
+        color: #ccc;
+    }
+</style>
+
+<div class="auth-box">
+    <h2>Вход</h2>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary w-100 mt-2">Войти</button>
+    </form>
+
+    <div class="auth-links mt-3">
+        <a href="{% url 'articles:password_reset' %}">Забыли пароль?</a><br><br>
+        <a href="{% url 'articles:signup' %}" style="color: #ccc;">Нет аккаунта? Зарегистрироваться</a>
+    </div>
+</div>
+{% endblock %}

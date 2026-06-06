@@ -1,0 +1,114 @@
+{% extends "articles/base.html" %}
+{% block title %}Статьи{% endblock %}
+
+{% block content %}
+<style>
+    .article-card {
+        background-color: #1a1a1a;
+        border: 1px solid #2a2a2a;
+        border-radius: 10px;
+        padding: 20px 24px;
+        margin-bottom: 14px;
+        transition: border-color 0.2s;
+        text-decoration: none;
+        display: block;
+        color: inherit;
+    }
+    .article-card:hover {
+        border-color: #7c6af7;
+        color: inherit;
+    }
+    .article-card h2 {
+        font-size: 17px;
+        font-weight: 600;
+        color: #e8e8e8;
+        margin-bottom: 6px;
+    }
+    .article-card:hover h2 {
+        color: #7c6af7;
+    }
+    .article-meta {
+        font-size: 13px;
+        color: #666;
+    }
+
+    .page-title {
+        font-size: 28px;
+        font-weight: 700;
+        margin-bottom: 24px;
+        color: #fff;
+    }
+
+    .search-input {
+        max-width: 460px;
+    }
+
+    /* пагинация */
+    .page-link {
+        background-color: #1a1a1a;
+        border-color: #333;
+        color: #aaa;
+    }
+    .page-link:hover {
+        background-color: #252525;
+        border-color: #555;
+        color: #fff;
+    }
+    .page-item.disabled .page-link {
+        background-color: #1a1a1a;
+        border-color: #2a2a2a;
+        color: #444;
+    }
+</style>
+
+<h1 class="page-title">Статьи</h1>
+
+<form method="get" class="mb-4 search-input">
+    <div class="input-group">
+        <input type="text"
+               class="form-control"
+               name="q"
+               placeholder="Поиск..."
+               value="{{ query|default:'' }}">
+        <button type="submit" class="btn btn-outline-secondary">Найти</button>
+    </div>
+</form>
+
+{% for article in articles %}
+    <a href="{% url 'articles:article_detail' article.pk %}" class="article-card">
+        <h2>{{ article.title }}</h2>
+        <div class="article-meta">
+            {{ article.author.username }} · {{ article.created_at|date:"d.m.Y" }} · 👁 {{ article.views_count }}
+        </div>
+    </a>
+{% empty %}
+    <p class="text-secondary">Статей пока нет.</p>
+{% endfor %}
+
+{% if articles.has_previous or articles.has_next %}
+<nav class="mt-4">
+    <ul class="pagination">
+        {% if articles.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page=1{% if query %}&q={{ query }}{% endif %}">«</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ articles.previous_page_number }}{% if query %}&q={{ query }}{% endif %}">‹</a>
+            </li>
+        {% endif %}
+        <li class="page-item disabled">
+            <span class="page-link">{{ articles.number }} / {{ articles.paginator.num_pages }}</span>
+        </li>
+        {% if articles.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ articles.next_page_number }}{% if query %}&q={{ query }}{% endif %}">›</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ articles.paginator.num_pages }}{% if query %}&q={{ query }}{% endif %}">»</a>
+            </li>
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}
+
+{% endblock %}

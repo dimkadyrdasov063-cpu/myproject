@@ -1,0 +1,80 @@
+{% extends "articles/base.html" %}
+{% block title %}{{ article.title }}{% endblock %}
+
+{% block content %}
+<style>
+    .article-wrapper {
+        max-width: 740px;
+    }
+    .article-title {
+        font-size: 30px;
+        font-weight: 700;
+        color: #fff;
+        line-height: 1.3;
+        margin-bottom: 16px;
+    }
+    .article-meta {
+        color: #666;
+        font-size: 13.5px;
+        margin-bottom: 28px;
+        display: flex;
+        gap: 16px;
+        flex-wrap: wrap;
+    }
+    .article-body {
+        font-size: 16px;
+        line-height: 1.8;
+        color: #ccc;
+        border-top: 1px solid #2a2a2a;
+        padding-top: 28px;
+        margin-bottom: 36px;
+    }
+    .article-actions {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        border-top: 1px solid #2a2a2a;
+        padding-top: 24px;
+    }
+</style>
+
+<div class="article-wrapper">
+    <a href="{% url 'articles:article_list' %}" class="text-secondary text-decoration-none d-inline-block mb-4" style="font-size: 13px;">
+        ← Все статьи
+    </a>
+
+    <h1 class="article-title">{{ article.title }}</h1>
+
+    <div class="article-meta">
+        <span>👤 {{ article.author.username }}</span>
+        <span>📅 {{ article.created_at|date:"d.m.Y H:i" }}</span>
+        <span>👁 {{ article.views_count }} просмотров</span>
+    </div>
+
+    <div class="article-body">
+        {{ article.content|linebreaks }}
+    </div>
+
+    <div class="article-actions">
+        <button onclick="copyLink()" class="btn btn-outline-secondary btn-sm">
+            Скопировать ссылку
+        </button>
+        {% if user == article.author %}
+            <a href="{% url 'articles:article_edit' article.pk %}" class="btn btn-outline-warning btn-sm">
+                Редактировать
+            </a>
+            <a href="{% url 'articles:article_delete' article.pk %}" class="btn btn-outline-danger btn-sm"
+               onclick="return confirm('Удалить статью?')">
+                Удалить
+            </a>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+function copyLink() {
+    navigator.clipboard.writeText(window.location.href);
+    alert('Ссылка скопирована!');
+}
+</script>
+{% endblock %}

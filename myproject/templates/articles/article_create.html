@@ -1,0 +1,60 @@
+{% extends "articles/base.html" %}
+{% block title %}Новая статья{% endblock %}
+
+{% block content %}
+<style>
+    .create-wrapper {
+        max-width: 700px;
+    }
+    .create-wrapper h1 {
+        font-size: 26px;
+        font-weight: 700;
+        color: #fff;
+        margin-bottom: 24px;
+    }
+    /* форма */
+    .create-wrapper p {
+        margin-bottom: 18px;
+    }
+    .create-wrapper label {
+        display: block;
+        color: #999;
+        font-size: 13px;
+        margin-bottom: 5px;
+    }
+    .create-wrapper input,
+    .create-wrapper textarea {
+        width: 100%;
+        background-color: #1e1e1e;
+        border: 1px solid #333;
+        border-radius: 8px;
+        color: #e0e0e0;
+        font-size: 15px;
+        padding: 10px 14px;
+        font-family: 'Inter', sans-serif;
+        outline: none;
+    }
+    .create-wrapper input:focus,
+    .create-wrapper textarea:focus {
+        border-color: #7c6af7;
+        box-shadow: 0 0 0 3px rgba(124, 106, 247, 0.15);
+    }
+    .create-wrapper textarea {
+        min-height: 280px;
+        resize: vertical;
+    }
+</style>
+
+<div class="create-wrapper">
+    <h1>Написать статью</h1>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <div class="d-flex gap-2 mt-3">
+            <button type="submit" class="btn btn-primary">Опубликовать</button>
+            <a href="{% url 'articles:article_list' %}" class="btn btn-outline-secondary">Отмена</a>
+        </div>
+    </form>
+</div>
+{% endblock %}
